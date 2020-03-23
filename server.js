@@ -7,7 +7,9 @@ const url = require('url');
 var httpServer = require('http');
 
 const ioServer = require('socket.io');
+
 const RTCMultiConnectionServer = require('rtcmulticonnection-server');
+const kakfaServerDecorator = require('kafka-rtcmulticonnection-server-decorator');
 
 var PORT = 9001;
 var isUseHTTPs = false;
@@ -273,19 +275,28 @@ httpApp = httpApp.listen(process.env.PORT || PORT, process.env.IP || "0.0.0.0", 
 // --------------------------
 // socket.io codes goes below
 
-ioServer(httpApp).on('connection', function(socket) {
-    RTCMultiConnectionServer.addSocket(socket, config);
+var zookeeperAddress = '127.0.0.1:2181';
+const io = ioServer(httpApp);
+//io.adapter(kafka(zookeeperAddress));
 
-    // ----------------------
-    // below code is optional
+ 
+io.on('connection', function(socket) {
+    rtcServer = kakfaServerDecorator(RTCMultiConnectionServer);
+    rtcServer.addSocket(socket, {
+      eventName: 'video-conference-demo',
+      zookeeperAddress: zookeeperAddress,
+      topic: 'rtc_demo'
+    });
 
     const params = socket.handshake.query;
-
     if (!params.socketCustomEvent) {
         params.socketCustomEvent = 'custom-message';
     }
 
-    socket.on(params.socketCustomEvent, function(message) {
-        socket.broadcast.emit(params.socketCustomEvent, message);
+
+    // notify all clients
+    socket.on('open-room', function(data) {
+      io.emit('open-room', data);
     });
+
 });

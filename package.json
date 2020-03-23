@@ -54,9 +54,10 @@
     "getstats": "latest",
     "multistreamsmixer": "latest",
     "recordrtc": "latest",
-    "rtcmulticonnection-server": "latest",
+    "rtcmulticonnection-server": "smashleon23/RTCMultiConnection-Server",
     "socket.io": "latest",
-    "webrtc-adapter": "latest"
+    "webrtc-adapter": "latest",
+    "kafka-rtcmulticonnection-server-decorator": "smashleon23/kafka-rtcmulticonnection-server-decorator"
   },
   "analyze": false,
   "license": "MIT",

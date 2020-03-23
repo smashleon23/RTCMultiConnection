@@ -349,7 +349,8 @@ var RTCMultiConnection = function(roomid, forceOptions) {
             mPeer.addNegotiatedMessage(message.message, message.sender);
         }
 
-        connection.socket.on(connection.socketMessageEvent, onMessageEvent);
+        // prevent sending message directly in favor of sending as they arrive from kafka
+        //connection.socket.on(connection.socketMessageEvent, onMessageEvent);
 
         var alreadyConnected = false;
 

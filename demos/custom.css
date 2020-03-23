@@ -1,0 +1,70 @@
+#video-player-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-container {
+  display: flex;
+  flex-direction: column;
+  margin: 8%;
+  border: 1px solid #ccc;
+}
+
+.ui-container > * {
+  padding: 4%;
+  margin: 0px !important;
+}
+
+.ui-container .controls {
+  flex: 1;
+  border-right: 0px none;
+  color: gray;
+  display: flex;
+  flex-direction: row;
+}
+
+.ui-container .controls > * {
+  flex: 1;
+  padding: 4%;
+}
+
+.ui-container .controls > .inputs {
+  padding-top: 0;
+}
+
+.hidden {
+display: none;
+}
+
+#videos-container {
+  flex: 1;
+  border-left: 0px none;
+}
+
+#room_list {
+  border-left: 1px solid #eee;
+}
+
+#room_list ul li {
+width: 100%;
+display: list-item;
+color:#444;
+border:1px solid #CCC;
+background:#DDD;
+box-shadow: 0 0 5px -1px rgba(0,0,0,0.2);
+cursor:pointer;
+vertical-align:middle;
+max-width: 40%;
+padding: 5px;
+margin: 3px;
+text-align: center;
+}
+
+
+.controls .inputs > * {
+  width: 100%;
+}
+
+#room-urls {
+  margin: 15px 8% !important;
+}
