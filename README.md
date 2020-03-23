@@ -1,72 +1,91 @@
-![](https://i.imgur.com/MFfRBSM.png)
+# Setup steps to install WebRTC demo
 
-# RTCMultiConnection - WebRTC JavaScript Library
+## Install KAKFA server
 
-[![npm](https://img.shields.io/npm/v/rtcmulticonnection.svg)](https://npmjs.org/package/rtcmulticonnection) [![downloads](https://img.shields.io/npm/dm/rtcmulticonnection.svg)](https://npmjs.org/package/rtcmulticonnection) [![Build Status: Linux](https://travis-ci.org/muaz-khan/RTCMultiConnection.png?branch=master)](https://travis-ci.org/muaz-khan/RTCMultiConnection)
+Install kafka if not installed already (installed via docker)
 
-> RTCMultiConnection is a WebRTC JavaScript library for peer-to-peer applications (screen sharing, audio/video conferencing, file sharing, media streaming etc.)
+git clone https://github.com/wurstmeister/kafka-docker.git 
 
-## Socket.io Signaling Server
+```
+cd kafka-docker
+```
 
-Signaling server has a separate repository:
+Install docker-compose (If you don't have kafka already and you want to use docker to install it)
 
-* https://github.com/muaz-khan/RTCMultiConnection-Server
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
 
-## Demos
+change permissions
+```
+sudo chmod +x /usr/local/bin/docker-compose
+```
 
-* https://rtcmulticonnection.herokuapp.com/
+Chech
+```
+docker-compose --version
+```
 
-## Getting Started Without Any Installation
+Using single node configuration
 
-* https://www.rtcmulticonnection.org/docs/getting-started/
+Do following changes to docker-compose-single-broker.yml
 
-## YouTube Channel
+Remove
+```
+-      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+-      KAFKA_CREATE_TOPICS: "test:1:1"
 
-* https://www.youtube.com/playlist?list=PLPRQUXAnRydKdyun-vjKPMrySoow2N4tl
+Add under environment
++      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
++      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
++      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
++      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+```
 
-## Install On Your Own Website
+Create images and boot containers
+```
+docker-compose -f docker-compose-single-broker.yml up
+```
 
-* https://github.com/muaz-khan/RTCMultiConnection/tree/master/docs/installation-guide.md
 
-```sh
-mkdir demo && cd demo
 
-# install from NPM
-npm install rtcmulticonnection
+## Install web application
 
-# or clone from github
-git clone https://github.com/muaz-khan/RTCMultiConnection.git ./
+Install mvn (Disregard if already have node)
 
-# install all required packages
-# you can optionally include --save-dev
+Install node version (if a node version is not already present)
+```
+nvm use 10.14.2
+```
+
+```
+git clone git://github.com/smashleon23/RTCMultiConnection
+
+cd RTCMultiConnection
+```
+
+Install dependencies
+```
 npm install
+```
 
+Create self signed certificates
+
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /home/mlopez/Documentos/docs/KAMBDA/RTC_demo/self-signed.key -out /home/mlopez/Documentos/docs/KAMBDA/RTC_demo/self-signed.crt
+```
+
+Enable HTTPS and point to the SSL files, change config.json as so:
+```
+ "isUseHTTPs": "true",
+  "sslKey": "/home/mlopez/Documentos/docs/KAMBDA/RTC_demo/self-signed.key",
+  "sslCert": "/home/mlopez/Documentos/docs/KAMBDA/RTC_demo/self-signed.crt",
+```
+
+Run the server
+```
 node server --port=9001
 ```
 
-## Integrate Inside Any Nodejs Application
 
-* https://github.com/muaz-khan/RTCMultiConnection-Server/wiki/Integrate-inside-nodejs-applications
 
-## `Config.json` Explained
-
-* https://github.com/muaz-khan/RTCMultiConnection-Server/wiki/config.json
-
-## How to Enable HTTPs?
-
-* https://github.com/muaz-khan/RTCMultiConnection-Server/wiki/How-to-Enable-HTTPs
-
-## Want to Contribute?
-
-RTCMultiConnection is using `Grunt` to compile javascript into `dist` directory:
-
-* https://github.com/muaz-khan/RTCMultiConnection/blob/master/CONTRIBUTING.md
-
-## Wiki Pages
-
-1. https://github.com/muaz-khan/RTCMultiConnection/wiki
-2. https://github.com/muaz-khan/RTCMultiConnection-Server/wiki
-
-## License
-
-[RTCMultiConnection](https://github.com/muaz-khan/RTCMultiConnection) is released under [MIT licence](https://github.com/muaz-khan/RTCMultiConnection/blob/master/LICENSE.md) . Copyright (c) [Muaz Khan](https://MuazKhan.com/).
