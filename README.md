@@ -21,7 +21,7 @@ change permissions
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-Chech
+Check version is installed
 ```
 docker-compose --version
 ```
